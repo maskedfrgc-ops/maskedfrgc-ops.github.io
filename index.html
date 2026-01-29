@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #1e1f22;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      background: #2b2d31;
+      border-radius: 8px;
+      padding: 10px 12px;
+      max-width: 85%;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .username {
+      font-weight: 600;
+    }
+
+    .role {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #444;
+      color: #ddd;
+    }
+
+    .timestamp {
+      font-size: 11px;
+      color: #aaa;
+      margin-left: auto;
+    }
+
+    .text {
+      color: #e3e5e8;
+      font-size: 14px;
+    }
+
+    #inputBar {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      background: #111214;
+      border-top: 1px solid #2b2d31;
+    }
+
+    input, select {
+      background: #1e1f22;
+      border: 1px solid #2b2d31;
+      color: white;
+      padding: 8px;
+      border-radius: 6px;
+    }
+
+    #usernameInput {
+      width: 120px;
+    }
+
+    #messageInput {
+      flex: 1;
+    }
+
+    button {
+      background: #5865f2;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="messages"></div>
+
+  <div id="inputBar">
+    <input id="usernameInput" placeholder="username" />
+
+    <select id="roleInput">
+      <option value="User">User</option>
+      <option value="Admin">Admin</option>
+      <option value="Mod">Mod</option>
+    </select>
+
+    <input id="messageInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    const messagesDiv = document.getElementById("messages");
+
+    // LOAD SAVED MESSAGES
+    let messages = JSON.parse(localStorage.getItem("chatMessages")) || [];
+
+    function saveMessages() {
+      localStorage.setItem("chatMessages", JSON.stringify(messages));
+    }
+
+    function sendMessage() {
+      const username = document.getElementById("usernameInput").value.trim();
+      const text = document.getElementById("messageInput").value.trim();
+      const role = document.getElementById("roleInput").value;
+
+      if (!username || !text) return;
+
+      messages.push({
+        username,
+        text,
+        role,
+        timestamp: new Date().toISOString()
+      });
+
+      saveMessages();
+      document.getElementById("messageInput").value = "";
+      renderMessages();
+    }
+
+    function roleColor(role) {
+      if (role === "Admin") return "#ff5555";
+      if (role === "Mod") return "#57f287";
+      return "#a970ff";
+    }
+
+    function renderMessages() {
+      messagesDiv.innerHTML = "";
+
+      const sorted = [...messages].sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
+
+      for (const msg of sorted) {
+        const el = document.createElement("div");
+        el.className = "message";
+
+        const time = new Date(msg.timestamp).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+
+        el.innerHTML = `
+          <div class="header">
+            <span class="username" style="color:${roleColor(msg.role)}">
+              ${msg.username}
+            </span>
+            <span class="role">${msg.role}</span>
+            <span class="timestamp">${time}</span>
+          </div>
+          <div class="text">${msg.text}</div>
+        `;
+
+        messagesDiv.appendChild(el);
+      }
+    }
+
+    // INITIAL RENDER
+    renderMessages();
+  </script>
+
+</body>
+</html>
