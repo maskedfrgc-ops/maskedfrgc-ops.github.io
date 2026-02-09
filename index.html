@@ -1,196 +1,1708 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Chat</title>
-
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unblocked Chicken</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      background: #1e1f22;
-      color: white;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    #messages {
-      flex: 1;
+    html {
       overflow-y: auto;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      overflow-x: hidden;
     }
-
-    .message {
-      background: #2b2d31;
-      border-radius: 8px;
-      padding: 10px 12px;
-      max-width: 85%;
+    
+    body {
+      box-sizing: border-box;
     }
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      margin-bottom: 4px;
+    
+    * {
+      font-family: 'Nunito', sans-serif;
     }
-
-    .username {
-      font-weight: 600;
+    
+    h1, h2, h3, .clay-title {
+      font-family: 'Baloo 2', cursive;
     }
-
-    .role {
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: #444;
-      color: #ddd;
+    
+    .clay-surface {
+      background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+      box-shadow: 
+        8px 8px 16px rgba(255, 111, 0, 0.15),
+        -4px -4px 12px rgba(255, 255, 255, 0.9),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.8);
+      border-radius: 24px;
     }
-
-    .timestamp {
-      font-size: 11px;
-      color: #aaa;
-      margin-left: auto;
+    
+    .clay-button {
+      background: linear-gradient(145deg, #ff9800, #ff6f00);
+      box-shadow: 
+        6px 6px 12px rgba(255, 107, 0, 0.4),
+        -3px -3px 8px rgba(255, 255, 255, 0.3),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    .text {
-      color: #e3e5e8;
-      font-size: 14px;
+    
+    .clay-button:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 
+        8px 8px 16px rgba(255, 107, 0, 0.5),
+        -4px -4px 10px rgba(255, 255, 255, 0.4);
     }
-
-    #inputBar {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      background: #111214;
-      border-top: 1px solid #2b2d31;
+    
+    .clay-button:active {
+      transform: scale(0.95);
     }
-
-    input, select {
-      background: #1e1f22;
-      border: 1px solid #2b2d31;
-      color: white;
-      padding: 8px;
-      border-radius: 6px;
+    
+    .clay-card {
+      background: linear-gradient(145deg, #ffffff, #fff8f0);
+      box-shadow: 
+        12px 12px 24px rgba(255, 107, 0, 0.12),
+        -6px -6px 16px rgba(255, 255, 255, 0.95),
+        inset 2px 2px 4px rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    #usernameInput {
-      width: 120px;
+    
+    .clay-card:hover {
+      transform: translateY(-8px) rotateX(5deg) rotateY(-2deg);
+      box-shadow: 
+        16px 20px 32px rgba(255, 107, 0, 0.18),
+        -8px -8px 20px rgba(255, 255, 255, 1);
     }
-
-    #messageInput {
-      flex: 1;
+    
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 24px;
     }
-
-    button {
-      background: #5865f2;
+    
+    .gradient-pink { background: linear-gradient(135deg, #ffb74d, #ff9800, #ff8c00); }
+    .gradient-blue { background: linear-gradient(135deg, #ffb74d, #ffa726, #ff9800); }
+    .gradient-green { background: linear-gradient(135deg, #ff9800, #f57c00, #e65100); }
+    .gradient-yellow { background: linear-gradient(135deg, #ffcc80, #ffb74d, #ff9800); }
+    .gradient-violet { background: linear-gradient(135deg, #ffa726, #ff9800, #ff6f00); }
+    .gradient-orange { background: linear-gradient(135deg, #ffb74d, #ff9800, #ff6f00); }
+    
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.6;
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .blob-1 { 
+      width: 300px; height: 300px; 
+      background: linear-gradient(135deg, #ffb74d, #ff9800);
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+    
+    .blob-2 { 
+      width: 250px; height: 250px; 
+      background: linear-gradient(135deg, #ffa726, #ff9800);
+      top: 50%; right: -80px;
+      animation-delay: -2s;
+    }
+    
+    .blob-3 { 
+      width: 200px; height: 200px; 
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      bottom: -60px; left: 30%;
+      animation-delay: -4s;
+    }
+    
+    .blob-4 { 
+      width: 180px; height: 180px; 
+      background: linear-gradient(135deg, #ffa726, #ff8a65);
+      top: 20%; left: 60%;
+      animation-delay: -6s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 30px) scale(1.02); }
+    }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+      50% { transform: scale(1.1) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-3deg); }
+      75% { transform: rotate(3deg); }
+    }
+    
+    @keyframes pop {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-200px) rotate(720deg); opacity: 0; }
+    }
+    
+    .animate-bounce-in { animation: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .animate-wiggle { animation: wiggle 0.5s ease-in-out; }
+    .animate-pop { animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    
+    .loader-blob {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff9800, #ff6f00);
+      animation: loader-bounce 1s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    }
+    
+    @keyframes loader-bounce {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(0.8, 1.2) translateY(-20px); }
+    }
+    
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: confetti 1s ease-out forwards;
+    }
+    
+    .fab-menu {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .fab-menu.expanded .fab-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .fab-item {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .chat-bubble {
+      animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    .new-message {
+      animation: wiggle 0.5s ease-in-out;
+    }
+    
+    .clay-input {
+      background: linear-gradient(145deg, #fff5f0, #ffffff);
+      box-shadow: 
+        inset 4px 4px 8px rgba(255, 107, 0, 0.08),
+        inset -2px -2px 6px rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
       border: none;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
     }
-
-    button:hover {
-      opacity: 0.9;
+    
+    .clay-input:focus {
+      box-shadow: 
+        inset 4px 4px 8px rgba(255, 107, 0, 0.1),
+        inset -2px -2px 6px rgba(255, 255, 255, 0.9),
+        0 0 0 3px rgba(255, 107, 0, 0.3);
     }
-  </style>
-</head>
-
-<body>
-
-  <div id="messages"></div>
-
-  <div id="inputBar">
-    <input id="usernameInput" placeholder="username" />
-
-    <select id="roleInput">
-      <option value="User">User</option>
-      <option value="Admin">Admin</option>
-      <option value="Mod">Mod</option>
-    </select>
-
-    <input id="messageInput" placeholder="Type a message..." />
-    <button onclick="sendMessage()">Send</button>
-  </div>
-
-  <script>
-    const messagesDiv = document.getElementById("messages");
-
-    // LOAD SAVED MESSAGES
-    let messages = JSON.parse(localStorage.getItem("chatMessages")) || [];
-
-    function saveMessages() {
-      localStorage.setItem("chatMessages", JSON.stringify(messages));
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #ffb74d, #ffa726, #ff9800);
+      background-size: 200% 100%;
+      animation: gradient-shift 2s ease infinite;
     }
-
-    function sendMessage() {
-      const username = document.getElementById("usernameInput").value.trim();
-      const text = document.getElementById("messageInput").value.trim();
-      const role = document.getElementById("roleInput").value;
-
-      if (!username || !text) return;
-
-      messages.push({
-        username,
-        text,
-        role,
-        timestamp: new Date().toISOString()
-      });
-
-      saveMessages();
-      document.getElementById("messageInput").value = "";
-      renderMessages();
+    
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-
-    function roleColor(role) {
-      if (role === "Admin") return "#ff5555";
-      if (role === "Mod") return "#57f287";
-      return "#a970ff";
+    
+    .badge {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    function renderMessages() {
-      messagesDiv.innerHTML = "";
-
-      const sorted = [...messages].sort(
-        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-      );
-
-      for (const msg of sorted) {
-        const el = document.createElement("div");
-        el.className = "message";
-
-        const time = new Date(msg.timestamp).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit"
-        });
-
-        el.innerHTML = `
-          <div class="header">
-            <span class="username" style="color:${roleColor(msg.role)}">
-              ${msg.username}
-            </span>
-            <span class="role">${msg.role}</span>
-            <span class="timestamp">${time}</span>
-          </div>
-          <div class="text">${msg.text}</div>
-        `;
-
-        messagesDiv.appendChild(el);
+    
+    .badge:hover {
+      transform: scale(1.15) rotate(10deg);
+    }
+    
+    .slide-menu {
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .slide-menu.open {
+      transform: translateX(0);
+    }
+    
+    .menu-overlay {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .menu-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .icon-3d {
+      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
+      transition: all 0.2s ease;
+    }
+    
+    .icon-3d:hover {
+      transform: rotate(10deg) scale(1.1);
+    }
+    
+    .glow-border {
+      position: relative;
+    }
+    
+    .glow-border::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, #ffb74d, #ffa726, #ff9800, #ffb74d);
+      background-size: 300% 300%;
+      animation: glow-rotate 4s linear infinite;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .glow-border:hover::before {
+      opacity: 1;
+    }
+    
+    @keyframes glow-rotate {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+    
+    .section {
+      animation: fade-scale 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    .section.hidden {
+      animation: none;
+      display: none;
+    }
+    
+    @keyframes fade-scale {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
       }
     }
-
-    // INITIAL RENDER
-    renderMessages();
+    
+    .login-screen {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      width: 100%;
+      max-width: 450px;
+      padding: 2rem;
+      z-index: 10;
+    }
+    
+    .login-form-wrapper {
+      width: 100%;
+      max-width: 100%;
+    }
+    
+    .login-error {
+      color: #ff6f00;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
+    .login-error.show {
+      display: block;
+    }
+    
+    .approval-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .approval-pending {
+      background: #fef3c7;
+      color: #b45309;
+    }
+    
+    .approval-approved {
+      background: #dcfce7;
+      color: #166534;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="min-h-full w-full relative overflow-hidden" style="background: linear-gradient(135deg, #ffe0b2 0%, #ffc107 50%, #ffb74d 100%);"><!-- Animated Background Blobs -->
+   <div class="blob blob-1"></div>
+   <div class="blob blob-2"></div>
+   <div class="blob blob-3"></div>
+   <div class="blob blob-4"></div><!-- Login Screen -->
+   <div id="login-screen" class="login-screen">
+    <div class="login-container"><!-- Login Form -->
+     <div class="login-form-wrapper animate-bounce-in">
+      <div class="text-center mb-8">
+       <h1 class="clay-title text-4xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">Unblocked Chicken</h1>
+       <p class="text-orange-600 mt-2">Step into the game vault</p>
+      </div>
+      <form id="login-form" class="clay-surface p-8 space-y-6">
+       <div><label for="login-username" class="block text-sm font-semibold text-gray-700 mb-2">Username</label> <input type="text" id="login-username" placeholder="Choose your player name" class="clay-input w-full px-4 py-3" required>
+        <div class="login-error" id="username-error"></div>
+       </div>
+       <div><label for="login-password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label> <input type="password" id="login-password" placeholder="Your secret code" class="clay-input w-full px-4 py-3" required>
+        <div class="login-error" id="password-error"></div>
+       </div>
+       <div id="login-error-message" class="hidden bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm"></div><button type="submit" class="clay-button text-white w-full py-3 font-semibold text-lg hover:scale-105 transition-transform"> <span class="flex items-center justify-center gap-2">
+         <svg class="w-5 h-5" viewbox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
+         </svg> Enter the Vault </span> </button>
+       <p class="text-center text-xs text-gray-500">Choose any username and password to get started</p>
+      </form>
+     </div>
+    </div>
+   </div><!-- Menu Overlay -->
+   <div id="menu-overlay" class="menu-overlay fixed inset-0 bg-black/30 backdrop-blur-sm z-40"></div><!-- Slide-Out Menu -->
+   <nav id="slide-menu" class="slide-menu fixed left-0 top-0 h-full w-72 glass-panel z-50 p-6 flex flex-col"><span class="clay-title text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent" id="menu-title">Unblocked Chicken</span>
+    <div class="flex flex-col gap-3 flex-1"><button onclick="showSection('home')" class="menu-item flex items-center gap-3 p-3 rounded-xl hover:bg-white/30 transition-all" data-section="home">
+      <svg class="w-7 h-7 icon-3d" viewbox="0 0 32 32" fill="none"><path d="M6 14l10-9 10 9v12a2 2 0 01-2 2H8a2 2 0 01-2-2V14z" fill="url(#homeGrad)" stroke="#fff" stroke-width="1.5" /> <rect x="12" y="18" width="8" height="10" rx="1" fill="white" /> <defs>
+        <lineargradient id="homeGrad" x1="6" y1="5" x2="26" y2="28">
+         <stop offset="0%" stop-color="#ffb74d" />
+         <stop offset="100%" stop-color="#ff9800" />
+        </lineargradient>
+       </defs>
+      </svg><span class="font-semibold text-gray-700">Home</span> </button> <button onclick="showSection('chat')" class="menu-item flex items-center gap-3 p-3 rounded-xl hover:bg-white/30 transition-all" data-section="chat">
+      <svg class="w-7 h-7 icon-3d" viewbox="0 0 32 32" fill="none"><path d="M4 8a4 4 0 014-4h16a4 4 0 014 4v12a4 4 0 01-4 4H10l-6 4v-4a4 4 0 01-4-4V8z" fill="url(#chatGrad)" /> <circle cx="11" cy="14" r="2" fill="white" /> <circle cx="16" cy="14" r="2" fill="white" /> <circle cx="21" cy="14" r="2" fill="white" /> <defs>
+        <lineargradient id="chatGrad" x1="4" y1="4" x2="28" y2="28">
+         <stop offset="0%" stop-color="#ffa726" />
+         <stop offset="100%" stop-color="#ff6f00" />
+        </lineargradient>
+       </defs>
+      </svg><span class="font-semibold text-gray-700">Chat</span> </button> <button onclick="showSection('profile')" class="menu-item flex items-center gap-3 p-3 rounded-xl hover:bg-white/30 transition-all" data-section="profile">
+      <svg class="w-7 h-7 icon-3d" viewbox="0 0 32 32" fill="none"><circle cx="16" cy="12" r="6" fill="url(#profileGrad)" /> <path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" fill="url(#profileGrad2)" /> <defs>
+        <lineargradient id="profileGrad" x1="10" y1="6" x2="22" y2="18">
+         <stop offset="0%" stop-color="#ffb74d" />
+         <stop offset="100%" stop-color="#ffa726" />
+        </lineargradient>
+        <lineargradient id="profileGrad2" x1="6" y1="18" x2="26" y2="28">
+         <stop offset="0%" stop-color="#ffb74d" />
+         <stop offset="100%" stop-color="#ffa726" />
+        </lineargradient>
+       </defs>
+      </svg><span class="font-semibold text-gray-700">Profile</span> </button> <button id="admin-menu-btn" onclick="showSection('admin')" class="menu-item flex items-center gap-3 p-3 rounded-xl hover:bg-white/30 transition-all hidden" data-section="admin">
+      <svg class="w-7 h-7 icon-3d" viewbox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" fill="url(#gearGrad)" /> <circle cx="16" cy="16" r="5" fill="white" /> <g fill="url(#gearGrad)">
+        <rect x="14" y="2" width="4" height="6" rx="2" />
+        <rect x="14" y="24" width="4" height="6" rx="2" />
+        <rect x="2" y="14" width="6" height="4" rx="2" />
+        <rect x="24" y="14" width="6" height="4" rx="2" />
+       </g> <defs>
+        <lineargradient id="gearGrad" x1="4" y1="4" x2="28" y2="28">
+         <stop offset="0%" stop-color="#ff9800" />
+         <stop offset="100%" stop-color="#ff6f00" />
+        </lineargradient>
+       </defs>
+      </svg><span class="font-semibold text-gray-700">Admin Panel</span> </button> <button onclick="logout()" class="menu-item flex items-center gap-3 p-3 rounded-xl hover:bg-white/30 transition-all mt-auto">
+      <svg class="w-7 h-7 icon-3d" viewbox="0 0 32 32" fill="none"><path d="M18 6h8a2 2 0 012 2v16a2 2 0 01-2 2h-8M11 12l-3 3 3 3M8 15h10" stroke="#ff9800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+      </svg><span class="font-semibold text-gray-700">Logout</span> </button>
+    </div><!-- Badges Section -->
+    <div class="mt-auto pt-6 border-t border-white/30">
+     <p class="text-sm text-gray-500 mb-3">Your Badges</p>
+     <div class="flex gap-2 flex-wrap">
+      <div class="badge w-10 h-10 gradient-orange rounded-full flex items-center justify-center shadow-lg cursor-pointer" title="First Game Added">
+       <svg class="w-6 h-6" viewbox="0 0 24 24" fill="white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+       </svg>
+      </div>
+      <div class="badge w-10 h-10 gradient-pink rounded-full flex items-center justify-center shadow-lg cursor-pointer" title="Chat Champion">
+       <svg class="w-6 h-6" viewbox="0 0 24 24" fill="white"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 0h-4V4h4v2z" />
+       </svg>
+      </div>
+      <div class="badge w-10 h-10 gradient-yellow rounded-full flex items-center justify-center shadow-lg cursor-pointer" title="Speed Runner">
+       <svg class="w-6 h-6" viewbox="0 0 24 24" fill="white"><path d="M7 2v11h3v9l7-12h-4l4-8z" />
+       </svg>
+      </div>
+     </div>
+    </div>
+   </nav><!-- Main Content -->
+   <main id="main-content" class="hidden relative z-10 p-4 md:p-8 h-full overflow-auto w-full"><!-- Header -->
+    <header class="flex items-center justify-between mb-8"><button onclick="toggleMenu()" class="clay-surface p-3 cursor-pointer hover:scale-105 transition-transform">
+      <svg class="w-6 h-6" viewbox="0 0 24 24" fill="none" stroke="#ff9800" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6" /> <line x1="3" y1="12" x2="21" y2="12" /> <line x1="3" y1="18" x2="21" y2="18" />
+      </svg></button>
+     <h1 id="platform-title" class="clay-title text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent text-center">Unblocked Chicken</h1><button onclick="showSection('chat')" class="clay-surface p-3 cursor-pointer hover:scale-105 transition-transform relative">
+      <svg class="w-6 h-6 icon-3d" viewbox="0 0 32 32" fill="none"><path d="M4 8a4 4 0 014-4h16a4 4 0 014 4v12a4 4 0 01-4 4H10l-6 4v-4a4 4 0 01-4-4V8z" fill="url(#chatGrad2)" /> <circle cx="11" cy="14" r="2" fill="white" /> <circle cx="16" cy="14" r="2" fill="white" /> <circle cx="21" cy="14" r="2" fill="white" /> <defs>
+        <lineargradient id="chatGrad2" x1="4" y1="4" x2="28" y2="28">
+         <stop offset="0%" stop-color="#ffa726" />
+         <stop offset="100%" stop-color="#ff6f00" />
+        </lineargradient>
+       </defs>
+      </svg><span id="chat-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-white text-xs flex items-center justify-center font-bold">3</span> </button>
+    </header><!-- Home Section -->
+    <section id="section-home" class="section relative">
+     <p id="welcome-message" class="text-center text-gray-600 mb-8 text-lg">Welcome to your personal game vault!</p><!-- Progress Bar -->
+     <div class="clay-surface p-4 mb-8">
+      <div class="flex justify-between items-center mb-2"><span class="font-semibold text-gray-700">Collection Progress</span> <span id="progress-text" class="text-sm text-gray-500">0 / 10 games</span>
+      </div>
+      <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+       <div id="progress-fill" class="progress-bar h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+     </div><!-- Games Grid -->
+     <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Games will be rendered here -->
+     </div><!-- Empty State -->
+     <div id="empty-state" class="text-center py-16">
+      <h2 class="clay-title text-2xl font-bold text-gray-700 mb-2">No games yet!</h2>
+      <p class="text-gray-500 mb-6">Add your first game to start building your collection</p><button onclick="showSection('submit')" class="clay-button text-white px-8 py-3 font-semibold"> <span class="flex items-center gap-2">
+        <svg class="w-5 h-5" viewbox="0 0 24 24" fill="white"><path d="M12 4v16m-8-8h16" stroke="white" stroke-width="3" stroke-linecap="round" />
+        </svg> Submit Your First Game </span> </button>
+     </div>
+    </section><!-- Chat Section -->
+    <section id="section-chat" class="section hidden relative"><button onclick="showSection('home')" class="absolute top-4 right-4 w-10 h-10 clay-surface rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors hidden" id="chat-close-btn" title="Close">
+      <svg class="w-6 h-6 text-gray-600" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18" /> <line x1="6" y1="6" x2="18" y2="18" />
+      </svg></button>
+     <div class="clay-surface p-6 h-96 flex flex-col">
+      <h2 class="clay-title text-xl font-bold text-gray-700 mb-4 flex items-center gap-2">
+       <svg class="w-6 h-6 icon-3d" viewbox="0 0 32 32" fill="none"><path d="M4 8a4 4 0 014-4h16a4 4 0 014 4v12a4 4 0 01-4 4H10l-6 4v-4a4 4 0 01-4-4V8z" fill="url(#chatGrad3)" /> <defs>
+         <lineargradient id="chatGrad3" x1="4" y1="4" x2="28" y2="28">
+          <stop offset="0%" stop-color="#ffa726" />
+          <stop offset="100%" stop-color="#ff6f00" />
+         </lineargradient>
+        </defs>
+       </svg> Game Chat</h2>
+      <div id="chat-messages" class="flex-1 overflow-y-auto space-y-3 mb-4 p-2"><!-- Messages will appear here -->
+      </div>
+      <form id="chat-form" class="flex gap-3"><label for="chat-input" class="sr-only">Type a message</label> <input type="text" id="chat-input" placeholder="Type a message..." class="clay-input flex-1 px-4 py-3"> <button type="submit" class="clay-button text-white px-6 py-3 font-semibold">
+        <svg class="w-5 h-5" viewbox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z" />
+        </svg></button>
+      </form>
+     </div>
+    </section><!-- Profile Section -->
+    <section id="section-profile" class="section hidden relative"><button onclick="showSection('home')" class="absolute top-4 right-4 w-10 h-10 clay-surface rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors z-10" title="Close">
+      <svg class="w-6 h-6 text-gray-600" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18" /> <line x1="6" y1="6" x2="18" y2="18" />
+      </svg></button>
+     <div class="clay-surface p-8 text-center">
+      <div class="w-24 h-24 gradient-orange rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">
+       <svg class="w-14 h-14" viewbox="0 0 48 48" fill="white"><circle cx="24" cy="16" r="10" /> <path d="M8 44c0-8.8 7.2-16 16-16s16 7.2 16 16" />
+       </svg>
+      </div>
+      <h2 id="profile-username" class="clay-title text-2xl font-bold text-gray-700 mb-2">Guest Player</h2>
+      <p class="text-gray-500 mb-6">Collector since Feb 8, 2026</p>
+      <div class="grid grid-cols-3 gap-4 mb-8">
+       <div class="clay-card p-4">
+        <p id="stat-games" class="text-3xl font-bold text-orange-500">0</p>
+        <p class="text-sm text-gray-500">Games</p>
+       </div>
+       <div class="clay-card p-4">
+        <p class="text-3xl font-bold text-orange-600">3</p>
+        <p class="text-sm text-gray-500">Badges</p>
+       </div>
+       <div class="clay-card p-4">
+        <p class="text-3xl font-bold text-orange-700">7</p>
+        <p class="text-sm text-gray-500">Days Active</p>
+       </div>
+      </div>
+      <h3 class="clay-title text-lg font-bold text-gray-700 mb-4">All Badges</h3>
+      <div class="flex gap-4 justify-center flex-wrap">
+       <div class="badge w-16 h-16 gradient-orange rounded-full flex items-center justify-center shadow-lg cursor-pointer" title="First Game Added">
+        <svg class="w-10 h-10" viewbox="0 0 24 24" fill="white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+       </div>
+       <div class="badge w-16 h-16 gradient-yellow rounded-full flex items-center justify-center shadow-lg cursor-pointer" title="Chat Champion">
+        <svg class="w-10 h-10" viewbox="0 0 24 24" fill="white"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 0h-4V4h4v2z" />
+        </svg>
+       </div>
+       <div class="badge w-16 h-16 gradient-pink rounded-full flex items-center justify-center shadow-lg cursor-pointer" title="Speed Runner">
+        <svg class="w-10 h-10" viewbox="0 0 24 24" fill="white"><path d="M7 2v11h3v9l7-12h-4l4-8z" />
+        </svg>
+       </div>
+       <div class="badge w-16 h-16 gradient-blue rounded-full flex items-center justify-center shadow-lg opacity-30 cursor-pointer" title="Collector (Locked)">
+        <svg class="w-10 h-10" viewbox="0 0 24 24" fill="white"><rect x="5" y="11" width="14" height="10" rx="2" /> <path d="M8 11V7a4 4 0 018 0v4" stroke="white" stroke-width="2" fill="none" />
+        </svg>
+       </div>
+       <div class="badge w-16 h-16 gradient-violet rounded-full flex items-center justify-center shadow-lg opacity-30 cursor-pointer" title="Master (Locked)">
+        <svg class="w-10 h-10" viewbox="0 0 24 24" fill="white"><path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7l2-7z" />
+        </svg>
+       </div>
+      </div>
+     </div>
+    </section><!-- Submit Game Section -->
+    <section id="section-submit" class="section hidden relative"><button onclick="showSection('home')" class="absolute top-4 right-4 w-10 h-10 clay-surface rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors z-10" title="Close">
+      <svg class="w-6 h-6 text-gray-600" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18" /> <line x1="6" y1="6" x2="18" y2="18" />
+      </svg></button>
+     <div class="clay-surface p-6 md:p-8">
+      <h2 class="clay-title text-2xl font-bold text-gray-700 mb-6 flex items-center gap-3">
+       <svg class="w-8 h-8 icon-3d" viewbox="0 0 32 32" fill="none"><path d="M16 4v24M4 16h24" stroke="#ff9800" stroke-width="3" stroke-linecap="round" />
+       </svg> Submit a Game</h2>
+      <form id="submit-game-form" class="space-y-6">
+       <div><label for="submit-game-title" class="block text-sm font-semibold text-gray-700 mb-2">Game Title</label> <input type="text" id="submit-game-title" placeholder="Enter game title" class="clay-input w-full px-4 py-3" required>
+       </div>
+       <div><label for="submit-game-description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label> <textarea id="submit-game-description" placeholder="Describe your game..." rows="3" class="clay-input w-full px-4 py-3 resize-none"></textarea>
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-2">Choose Color Theme</label>
+        <div class="flex gap-3 flex-wrap"><button type="button" onclick="selectSubmitColor('pink')" class="submit-color-option w-12 h-12 gradient-orange rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="pink"></button> <button type="button" onclick="selectSubmitColor('blue')" class="submit-color-option w-12 h-12 gradient-blue rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="blue"></button> <button type="button" onclick="selectSubmitColor('green')" class="submit-color-option w-12 h-12 gradient-green rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="green"></button> <button type="button" onclick="selectSubmitColor('yellow')" class="submit-color-option w-12 h-12 gradient-yellow rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="yellow"></button> <button type="button" onclick="selectSubmitColor('violet')" class="submit-color-option w-12 h-12 gradient-violet rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="violet"></button> <button type="button" onclick="selectSubmitColor('orange')" class="submit-color-option w-12 h-12 gradient-orange rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="orange"></button>
+        </div>
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-2">Choose Icon</label>
+        <div class="flex gap-3 flex-wrap"><button type="button" onclick="selectSubmitIcon('gamepad')" class="submit-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="gamepad">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><rect x="4" y="10" width="24" height="14" rx="4" fill="#ff9800" /> <circle cx="10" cy="17" r="3" fill="white" /> <circle cx="22" cy="17" r="3" fill="white" /> <rect x="14" y="14" width="4" height="6" rx="1" fill="white" />
+          </svg></button> <button type="button" onclick="selectSubmitIcon('puzzle')" class="submit-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="puzzle">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><path d="M8 8h6v2a3 3 0 006 0V8h6v6h-2a3 3 0 000 6h2v6h-6v-2a3 3 0 00-6 0v2H8v-6h2a3 3 0 000-6H8V8z" fill="#ffa726" />
+          </svg></button> <button type="button" onclick="selectSubmitIcon('racing')" class="submit-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="racing">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><ellipse cx="16" cy="20" rx="12" ry="6" fill="#ff9800" /> <rect x="10" y="8" width="12" height="12" rx="2" fill="#ff9800" /> <circle cx="10" cy="22" r="3" fill="#333" /> <circle cx="22" cy="22" r="3" fill="#333" />
+          </svg></button> <button type="button" onclick="selectSubmitIcon('adventure')" class="submit-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="adventure">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><path d="M16 4l4 12h-8l4-12z" fill="#ffb74d" /> <path d="M8 16l8 12 8-12H8z" fill="#ff9800" />
+          </svg></button> <button type="button" onclick="selectSubmitIcon('strategy')" class="submit-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="strategy">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><rect x="6" y="6" width="8" height="8" rx="1" fill="#ffa726" /> <rect x="18" y="6" width="8" height="8" rx="1" fill="#ff9800" /> <rect x="6" y="18" width="8" height="8" rx="1" fill="#ff9800" /> <rect x="18" y="18" width="8" height="8" rx="1" fill="#ffa726" />
+          </svg></button> <button type="button" onclick="selectSubmitIcon('sports')" class="submit-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="sports">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" fill="#ff9800" /> <path d="M8 16h16M16 8v16" stroke="white" stroke-width="2" /> <circle cx="16" cy="16" r="4" fill="white" />
+          </svg></button>
+        </div>
+       </div>
+       <div><label for="submit-game-password" class="block text-sm font-semibold text-gray-700 mb-2"> <span class="flex items-center gap-2">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="#ff9800"><rect x="5" y="11" width="14" height="10" rx="2" /> <path d="M8 11V7a4 4 0 018 0v4" stroke="#ff9800" stroke-width="2" fill="none" />
+          </svg> Password Protection (Optional) </span> </label> <input type="password" id="submit-game-password" placeholder="Leave empty for no password" class="clay-input w-full px-4 py-3">
+       </div>
+       <div id="submit-form-error" class="hidden text-red-500 text-sm p-3 bg-red-50 rounded-xl"></div>
+       <div id="submit-form-success" class="hidden text-green-600 text-sm p-3 bg-green-50 rounded-xl"></div>
+       <div class="flex gap-4"><button type="submit" id="submit-btn" class="clay-button text-white px-8 py-3 font-semibold flex-1 flex items-center justify-center gap-2">
+         <svg class="w-5 h-5" viewbox="0 0 24 24" fill="white"><path d="M12 4v16m-8-8h16" stroke="white" stroke-width="3" stroke-linecap="round" />
+         </svg><span id="submit-text">Submit Game</span> </button> <button type="button" onclick="previewSubmitGame()" class="clay-surface px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"> Preview </button>
+       </div>
+      </form><!-- Preview Card -->
+      <div id="submit-preview-container" class="hidden mt-8 pt-8 border-t border-gray-200">
+       <h3 class="clay-title text-lg font-bold text-gray-700 mb-4">Preview</h3>
+       <div id="submit-preview-card" class="clay-card p-6 max-w-sm"><!-- Preview content will be rendered here -->
+       </div>
+      </div>
+     </div>
+    </section><!-- Admin Panel Section -->
+    <section id="section-admin" class="section hidden relative"><button onclick="showSection('home')" class="absolute top-4 right-4 w-10 h-10 clay-surface rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors z-10" title="Close">
+      <svg class="w-6 h-6 text-gray-600" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18" /> <line x1="6" y1="6" x2="18" y2="18" />
+      </svg></button> <!-- Tabs -->
+     <div class="flex gap-2 mb-6"><button onclick="switchAdminTab('create')" id="admin-tab-create" class="clay-button text-white px-6 py-2 font-semibold"> Create Games </button> <button onclick="switchAdminTab('approvals')" id="admin-tab-approvals" class="clay-surface px-6 py-2 font-semibold text-gray-700 hover:bg-gray-100 transition-colors"> <span class="flex items-center gap-2"> Pending Approvals <span id="approval-count" class="bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">0</span> </span> </button>
+     </div><!-- Create Tab -->
+     <div id="admin-create-tab" class="clay-surface p-6 md:p-8">
+      <h2 class="clay-title text-2xl font-bold text-gray-700 mb-6 flex items-center gap-3">
+       <svg class="w-8 h-8 icon-3d" viewbox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" fill="url(#gearGrad)" /> <circle cx="16" cy="16" r="5" fill="white" /> <g fill="url(#gearGrad)">
+         <rect x="14" y="2" width="4" height="6" rx="2" />
+         <rect x="14" y="24" width="4" height="6" rx="2" />
+         <rect x="2" y="14" width="6" height="4" rx="2" />
+         <rect x="24" y="14" width="6" height="4" rx="2" />
+        </g> <defs>
+         <lineargradient id="gearGrad" x1="4" y1="4" x2="28" y2="28">
+          <stop offset="0%" stop-color="#ff9800" />
+          <stop offset="100%" stop-color="#ff6f00" />
+         </lineargradient>
+        </defs>
+       </svg> Add New Game (Admin)</h2>
+      <form id="add-game-form" class="space-y-6">
+       <div><label for="game-title" class="block text-sm font-semibold text-gray-700 mb-2">Game Title</label> <input type="text" id="game-title" placeholder="Enter game title" class="clay-input w-full px-4 py-3" required>
+       </div>
+       <div><label for="game-description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label> <textarea id="game-description" placeholder="Describe your game..." rows="3" class="clay-input w-full px-4 py-3 resize-none"></textarea>
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-2">Choose Color Theme</label>
+        <div class="flex gap-3 flex-wrap"><button type="button" onclick="selectAdminColor('pink')" class="admin-color-option w-12 h-12 gradient-orange rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="pink"></button> <button type="button" onclick="selectAdminColor('blue')" class="admin-color-option w-12 h-12 gradient-blue rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="blue"></button> <button type="button" onclick="selectAdminColor('green')" class="admin-color-option w-12 h-12 gradient-green rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="green"></button> <button type="button" onclick="selectAdminColor('yellow')" class="admin-color-option w-12 h-12 gradient-yellow rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="yellow"></button> <button type="button" onclick="selectAdminColor('violet')" class="admin-color-option w-12 h-12 gradient-violet rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="violet"></button> <button type="button" onclick="selectAdminColor('orange')" class="admin-color-option w-12 h-12 gradient-orange rounded-xl shadow-lg hover:scale-110 transition-transform ring-4 ring-transparent" data-color="orange"></button>
+        </div>
+       </div>
+       <div><label class="block text-sm font-semibold text-gray-700 mb-2">Choose Icon</label>
+        <div class="flex gap-3 flex-wrap"><button type="button" onclick="selectAdminIcon('gamepad')" class="admin-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="gamepad">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><rect x="4" y="10" width="24" height="14" rx="4" fill="#ff9800" /> <circle cx="10" cy="17" r="3" fill="white" /> <circle cx="22" cy="17" r="3" fill="white" /> <rect x="14" y="14" width="4" height="6" rx="1" fill="white" />
+          </svg></button> <button type="button" onclick="selectAdminIcon('puzzle')" class="admin-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="puzzle">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><path d="M8 8h6v2a3 3 0 006 0V8h6v6h-2a3 3 0 000 6h2v6h-6v-2a3 3 0 00-6 0v2H8v-6h2a3 3 0 000-6H8V8z" fill="#ffa726" />
+          </svg></button> <button type="button" onclick="selectAdminIcon('racing')" class="admin-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="racing">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><ellipse cx="16" cy="20" rx="12" ry="6" fill="#ff9800" /> <rect x="10" y="8" width="12" height="12" rx="2" fill="#ff9800" /> <circle cx="10" cy="22" r="3" fill="#333" /> <circle cx="22" cy="22" r="3" fill="#333" />
+          </svg></button> <button type="button" onclick="selectAdminIcon('adventure')" class="admin-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="adventure">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><path d="M16 4l4 12h-8l4-12z" fill="#ffb74d" /> <path d="M8 16l8 12 8-12H8z" fill="#ff9800" />
+          </svg></button> <button type="button" onclick="selectAdminIcon('strategy')" class="admin-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="strategy">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><rect x="6" y="6" width="8" height="8" rx="1" fill="#ffa726" /> <rect x="18" y="6" width="8" height="8" rx="1" fill="#ff9800" /> <rect x="6" y="18" width="8" height="8" rx="1" fill="#ff9800" /> <rect x="18" y="18" width="8" height="8" rx="1" fill="#ffa726" />
+          </svg></button> <button type="button" onclick="selectAdminIcon('sports')" class="admin-icon-option w-14 h-14 clay-card flex items-center justify-center hover:scale-110 transition-transform ring-4 ring-transparent" data-icon="sports">
+          <svg class="w-8 h-8" viewbox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" fill="#ff9800" /> <path d="M8 16h16M16 8v16" stroke="white" stroke-width="2" /> <circle cx="16" cy="16" r="4" fill="white" />
+          </svg></button>
+        </div>
+       </div>
+       <div><label for="game-password" class="block text-sm font-semibold text-gray-700 mb-2"> <span class="flex items-center gap-2">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="#ff9800"><rect x="5" y="11" width="14" height="10" rx="2" /> <path d="M8 11V7a4 4 0 018 0v4" stroke="#ff9800" stroke-width="2" fill="none" />
+          </svg> Password Protection (Optional) </span> </label> <input type="password" id="game-password" placeholder="Leave empty for no password" class="clay-input w-full px-4 py-3">
+       </div>
+       <div id="form-error" class="hidden text-red-500 text-sm p-3 bg-red-50 rounded-xl"></div>
+       <div id="form-success" class="hidden text-green-600 text-sm p-3 bg-green-50 rounded-xl"></div>
+       <div class="flex gap-4"><button type="submit" id="admin-submit-btn" class="clay-button text-white px-8 py-3 font-semibold flex-1 flex items-center justify-center gap-2">
+         <svg class="w-5 h-5" viewbox="0 0 24 24" fill="white"><path d="M12 4v16m-8-8h16" stroke="white" stroke-width="3" stroke-linecap="round" />
+         </svg><span id="admin-submit-text">Add Game</span> </button> <button type="button" onclick="previewAdminGame()" class="clay-surface px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"> Preview </button>
+       </div>
+      </form><!-- Preview Card -->
+      <div id="preview-container" class="hidden mt-8 pt-8 border-t border-gray-200">
+       <h3 class="clay-title text-lg font-bold text-gray-700 mb-4">Preview</h3>
+       <div id="preview-card" class="clay-card p-6 max-w-sm"><!-- Preview content will be rendered here -->
+       </div>
+      </div>
+     </div><!-- Approvals Tab -->
+     <div id="admin-approvals-tab" class="hidden">
+      <div id="approvals-list" class="space-y-4"><!-- Pending games will be rendered here -->
+      </div>
+      <div id="no-approvals" class="clay-surface p-8 text-center">
+       <svg class="w-24 h-24 mx-auto mb-4 opacity-50" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+       </svg>
+       <p class="text-gray-500 font-semibold">No pending approvals</p>
+      </div>
+     </div>
+    </section>
+   </main><!-- Floating Action Button -->
+   <div id="fab-menu" class="fab-menu fixed bottom-6 right-6 z-30 hidden"><button onclick="toggleFab()" id="fab-main" class="clay-button w-16 h-16 rounded-full text-white shadow-xl flex items-center justify-center transition-transform">
+     <svg id="fab-icon" class="w-8 h-8 transition-transform" viewbox="0 0 24 24" fill="white"><path d="M12 4v16m-8-8h16" stroke="white" stroke-width="3" stroke-linecap="round" />
+     </svg></button>
+    <div class="absolute bottom-20 right-0 flex flex-col gap-3">
+     <div class="fab-item"><button onclick="showSection('submit')" class="w-12 h-12 gradient-orange rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform" title="Submit Game">
+       <svg class="w-6 h-6" viewbox="0 0 24 24" fill="white"><path d="M12 4v16m-8-8h16" stroke="white" stroke-width="2.5" stroke-linecap="round" />
+       </svg></button>
+     </div>
+     <div class="fab-item" style="transition-delay: 0.05s"><button onclick="showSection('chat')" class="w-12 h-12 gradient-yellow rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform" title="Chat">
+       <svg class="w-6 h-6" viewbox="0 0 24 24" fill="white"><path d="M2 6a3 3 0 013-3h14a3 3 0 013 3v10a3 3 0 01-3 3H8l-4 3v-3a3 3 0 01-3-3V6z" />
+       </svg></button>
+     </div>
+     <div class="fab-item" style="transition-delay: 0.1s"><button onclick="showSection('profile')" class="w-12 h-12 gradient-pink rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform" title="Profile">
+       <svg class="w-6 h-6" viewbox="0 0 24 24" fill="white"><circle cx="12" cy="8" r="4" /> <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+       </svg></button>
+     </div>
+    </div>
+   </div><!-- Confetti Container -->
+   <div id="confetti-container" class="fixed inset-0 pointer-events-none z-50"></div><!-- Loading Overlay -->
+   <div id="loading-overlay" class="hidden fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="text-center">
+     <div class="loader-blob mx-auto mb-4"></div>
+     <p class="text-gray-600 font-semibold">Loading...</p>
+    </div>
+   </div><!-- Game Password Modal -->
+   <div id="password-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="clay-surface p-8 max-w-sm w-full animate-bounce-in">
+     <div class="text-center mb-6">
+      <div class="w-16 h-16 gradient-orange rounded-full mx-auto mb-4 flex items-center justify-center">
+       <svg class="w-10 h-10" viewbox="0 0 24 24" fill="white"><rect x="5" y="11" width="14" height="10" rx="2" /> <path d="M8 11V7a4 4 0 018 0v4" stroke="white" stroke-width="2" fill="none" />
+       </svg>
+      </div>
+      <h3 class="clay-title text-xl font-bold text-gray-700">Password Required</h3>
+      <p class="text-gray-500 text-sm mt-1">This game is password protected</p>
+     </div>
+     <form id="password-form"><label for="modal-password" class="sr-only">Enter password</label> <input type="password" id="modal-password" placeholder="Enter password" class="clay-input w-full px-4 py-3 mb-4">
+      <div id="password-error" class="hidden text-red-500 text-sm mb-4"></div>
+      <div class="flex gap-3"><button type="button" onclick="closePasswordModal()" class="flex-1 clay-surface py-3 font-semibold text-gray-700">Cancel</button> <button type="submit" class="flex-1 clay-button text-white py-3 font-semibold">Unlock</button>
+      </div>
+     </form>
+    </div>
+   </div><!-- Delete Confirmation Modal -->
+   <div id="delete-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="clay-surface p-8 max-w-sm w-full animate-bounce-in">
+     <div class="text-center mb-6">
+      <div class="w-16 h-16 bg-red-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+       <svg class="w-10 h-10 text-red-500" viewbox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+       </svg>
+      </div>
+      <h3 class="clay-title text-xl font-bold text-gray-700">Delete Game?</h3>
+      <p class="text-gray-500 text-sm mt-1" id="delete-game-name">This action cannot be undone</p>
+     </div>
+     <div class="flex gap-3"><button type="button" onclick="closeDeleteModal()" class="flex-1 clay-surface py-3 font-semibold text-gray-700">Cancel</button> <button type="button" onclick="confirmDelete()" id="confirm-delete-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-xl py-3 font-semibold transition-colors">Delete</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Admin usernames (exact case-sensitive match)
+    const ADMIN_USERS = ['chicken', 'chickentest', 'chickenhome'];
+    
+    // Configuration
+    const defaultConfig = {
+      platform_title: 'Unblocked Chicken',
+      welcome_message: 'Welcome to your personal game vault!',
+      primary_color: '#ff9800',
+      secondary_color: '#ffa726',
+      accent_color: '#ffb74d',
+      text_color: '#374151',
+      background_color: '#ffe0b2'
+    };
+    
+    let config = { ...defaultConfig };
+    let games = [];
+    let selectedColor = 'pink';
+    let selectedIcon = 'gamepad';
+    let selectedSubmitColor = 'pink';
+    let selectedSubmitIcon = 'gamepad';
+    let selectedAdminColor = 'pink';
+    let selectedAdminIcon = 'gamepad';
+    let fabExpanded = false;
+    let menuOpen = false;
+    let gameToDelete = null;
+    let gameToUnlock = null;
+    let isLoading = false;
+    let currentUser = null;
+    let isAdmin = false;
+    let pendingGames = [];
+    let currentAdminTab = 'create';
+    
+    // Icon SVGs
+    const iconSVGs = {
+      gamepad: `<svg class="w-12 h-12" viewBox="0 0 32 32" fill="none">
+        <rect x="4" y="10" width="24" height="14" rx="4" fill="white"/>
+        <circle cx="10" cy="17" r="3" fill="currentColor" opacity="0.3"/>
+        <circle cx="22" cy="17" r="3" fill="currentColor" opacity="0.3"/>
+        <rect x="14" y="14" width="4" height="6" rx="1" fill="currentColor" opacity="0.3"/>
+      </svg>`,
+      puzzle: `<svg class="w-12 h-12" viewBox="0 0 32 32" fill="none">
+        <path d="M8 8h6v2a3 3 0 006 0V8h6v6h-2a3 3 0 000 6h2v6h-6v-2a3 3 0 00-6 0v2H8v-6h2a3 3 0 000-6H8V8z" fill="white"/>
+      </svg>`,
+      racing: `<svg class="w-12 h-12" viewBox="0 0 32 32" fill="none">
+        <ellipse cx="16" cy="20" rx="12" ry="6" fill="white"/>
+        <rect x="10" y="8" width="12" height="12" rx="2" fill="white"/>
+        <circle cx="10" cy="22" r="3" fill="currentColor" opacity="0.3"/>
+        <circle cx="22" cy="22" r="3" fill="currentColor" opacity="0.3"/>
+      </svg>`,
+      adventure: `<svg class="w-12 h-12" viewBox="0 0 32 32" fill="none">
+        <path d="M16 4l4 12h-8l4-12z" fill="white"/>
+        <path d="M8 16l8 12 8-12H8z" fill="white" opacity="0.7"/>
+      </svg>`,
+      strategy: `<svg class="w-12 h-12" viewBox="0 0 32 32" fill="none">
+        <rect x="6" y="6" width="8" height="8" rx="1" fill="white"/>
+        <rect x="18" y="6" width="8" height="8" rx="1" fill="white" opacity="0.7"/>
+        <rect x="6" y="18" width="8" height="8" rx="1" fill="white" opacity="0.7"/>
+        <rect x="18" y="18" width="8" height="8" rx="1" fill="white"/>
+      </svg>`,
+      sports: `<svg class="w-12 h-12" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="12" fill="white"/>
+        <path d="M8 16h16M16 8v16" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+        <circle cx="16" cy="16" r="4" fill="currentColor" opacity="0.2"/>
+      </svg>`
+    };
+    
+    // Color classes
+    const colorClasses = {
+      pink: 'gradient-orange',
+      blue: 'gradient-blue',
+      green: 'gradient-green',
+      yellow: 'gradient-yellow',
+      violet: 'gradient-violet',
+      orange: 'gradient-orange'
+    };
+    
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        const approved = [];
+        const pending = [];
+        
+        data.forEach(game => {
+          if (game.status === 'pending') {
+            pending.push(game);
+          } else {
+            approved.push(game);
+          }
+        });
+        
+        games = approved;
+        pendingGames = pending;
+        
+        renderGames();
+        updateProgress();
+        updateStats();
+        updateApprovalCount();
+        renderPendingGames();
+      }
+    };
+    
+    // Get all taken usernames
+    function getTakenUsernames() {
+      const usernames = new Set();
+      games.forEach(game => {
+        if (game.username) usernames.add(game.username);
+      });
+      pendingGames.forEach(game => {
+        if (game.username) usernames.add(game.username);
+      });
+      return usernames;
+    }
+    
+    // Initialize
+    async function init() {
+      const loggedInUser = localStorage.getItem('clayGameUser');
+      if (loggedInUser) {
+        currentUser = loggedInUser;
+        isAdmin = ADMIN_USERS.includes(loggedInUser);
+        showMainApp();
+      } else {
+        showLoginScreen();
+      }
+    }
+    
+    function showLoginScreen() {
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('main-content').classList.add('hidden');
+      document.getElementById('fab-menu').classList.add('hidden');
+      setupLoginForm();
+    }
+    
+    function setupLoginForm() {
+      const form = document.getElementById('login-form');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        attemptLogin();
+      });
+    }
+    
+    function attemptLogin() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error-message');
+      
+      if (!username) {
+        errorEl.textContent = 'Please enter a username';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      
+      if (!password) {
+        errorEl.textContent = 'Please enter a password';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      
+      // Check if username is already taken
+      const takenUsernames = getTakenUsernames();
+      if (takenUsernames.has(username)) {
+        errorEl.textContent = 'This username is already taken. Please choose another.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      
+      localStorage.setItem('clayGameUser', username);
+      currentUser = username;
+      isAdmin = ADMIN_USERS.includes(username);
+      errorEl.classList.add('hidden');
+      showMainApp();
+    }
+    
+    function showMainApp() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+      document.getElementById('fab-menu').classList.remove('hidden');
+      
+      // Show/hide admin menu
+      if (isAdmin) {
+        document.getElementById('admin-menu-btn').classList.remove('hidden');
+      } else {
+        document.getElementById('admin-menu-btn').classList.add('hidden');
+      }
+      
+      setupMainApp();
+    }
+    
+    function logout() {
+      localStorage.removeItem('clayGameUser');
+      currentUser = null;
+      isAdmin = false;
+      games = [];
+      pendingGames = [];
+      document.getElementById('games-grid').innerHTML = '';
+      showLoginScreen();
+    }
+    
+    async function setupMainApp() {
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...config, ...newConfig };
+            applyConfig();
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [
+              {
+                get: () => cfg.primary_color || defaultConfig.primary_color,
+                set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+              },
+              {
+                get: () => cfg.secondary_color || defaultConfig.secondary_color,
+                set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+              },
+              {
+                get: () => cfg.accent_color || defaultConfig.accent_color,
+                set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+              },
+              {
+                get: () => cfg.text_color || defaultConfig.text_color,
+                set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => cfg.background_color || defaultConfig.background_color,
+                set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['platform_title', cfg.platform_title || defaultConfig.platform_title],
+            ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
+          ])
+        });
+        config = { ...defaultConfig, ...window.elementSdk.config };
+      }
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize data SDK');
+        }
+      }
+      
+      applyConfig();
+      setupEventListeners();
+      selectSubmitColor('pink');
+      selectSubmitIcon('gamepad');
+      selectAdminColor('pink');
+      selectAdminIcon('gamepad');
+      updateProfileUsername();
+    }
+    
+    function applyConfig() {
+      const titleEl = document.getElementById('platform-title');
+      const menuTitleEl = document.getElementById('menu-title');
+      const welcomeEl = document.getElementById('welcome-message');
+      
+      if (titleEl) titleEl.textContent = config.platform_title || defaultConfig.platform_title;
+      if (menuTitleEl) menuTitleEl.textContent = config.platform_title || defaultConfig.platform_title;
+      if (welcomeEl) welcomeEl.textContent = config.welcome_message || defaultConfig.welcome_message;
+    }
+    
+    function setupEventListeners() {
+      document.getElementById('submit-game-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await submitGame();
+      });
+      
+      document.getElementById('add-game-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await addAdminGame();
+      });
+      
+      document.getElementById('chat-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendChatMessage();
+      });
+      
+      document.getElementById('password-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        unlockGame();
+      });
+      
+      document.getElementById('menu-overlay').addEventListener('click', closeMenu);
+    }
+    
+    function updateProfileUsername() {
+      if (currentUser) {
+        document.getElementById('profile-username').textContent = currentUser + (isAdmin ? ' (Admin)' : '');
+      }
+    }
+    
+    // Navigation
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(`section-${section}`).classList.remove('hidden');
+      
+      // Show/hide close button for chat
+      const chatCloseBtn = document.getElementById('chat-close-btn');
+      if (section === 'chat') {
+        chatCloseBtn.classList.remove('hidden');
+      } else {
+        chatCloseBtn.classList.add('hidden');
+      }
+      
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('bg-white/30');
+        if (item.dataset.section === section) {
+          item.classList.add('bg-white/30');
+        }
+      });
+      
+      closeMenu();
+      closeFab();
+    }
+    
+    function switchAdminTab(tab) {
+      currentAdminTab = tab;
+      
+      document.getElementById('admin-create-tab').classList.add('hidden');
+      document.getElementById('admin-approvals-tab').classList.add('hidden');
+      
+      document.getElementById('admin-tab-create').classList.remove('clay-button');
+      document.getElementById('admin-tab-approvals').classList.remove('clay-button');
+      
+      if (tab === 'create') {
+        document.getElementById('admin-create-tab').classList.remove('hidden');
+        document.getElementById('admin-tab-create').classList.add('clay-button', 'text-white');
+        document.getElementById('admin-tab-approvals').classList.add('clay-surface', 'text-gray-700');
+      } else {
+        document.getElementById('admin-approvals-tab').classList.remove('hidden');
+        document.getElementById('admin-tab-approvals').classList.add('clay-button', 'text-white');
+        document.getElementById('admin-tab-create').classList.add('clay-surface', 'text-gray-700');
+      }
+    }
+    
+    function toggleMenu() {
+      menuOpen = !menuOpen;
+      document.getElementById('slide-menu').classList.toggle('open', menuOpen);
+      document.getElementById('menu-overlay').classList.toggle('open', menuOpen);
+    }
+    
+    function closeMenu() {
+      menuOpen = false;
+      document.getElementById('slide-menu').classList.remove('open');
+      document.getElementById('menu-overlay').classList.remove('open');
+    }
+    
+    function toggleFab() {
+      fabExpanded = !fabExpanded;
+      const fabMenu = document.getElementById('fab-menu');
+      const fabIcon = document.getElementById('fab-icon');
+      
+      fabMenu.classList.toggle('expanded', fabExpanded);
+      fabIcon.style.transform = fabExpanded ? 'rotate(45deg)' : 'rotate(0deg)';
+    }
+    
+    function closeFab() {
+      fabExpanded = false;
+      const fabMenu = document.getElementById('fab-menu');
+      const fabIcon = document.getElementById('fab-icon');
+      
+      fabMenu.classList.remove('expanded');
+      fabIcon.style.transform = 'rotate(0deg)';
+    }
+    
+    // Color and Icon Selection
+    function selectSubmitColor(color) {
+      selectedSubmitColor = color;
+      document.querySelectorAll('.submit-color-option').forEach(btn => {
+        btn.classList.remove('ring-gray-400');
+        if (btn.dataset.color === color) {
+          btn.classList.add('ring-gray-400');
+        }
+      });
+    }
+    
+    function selectSubmitIcon(icon) {
+      selectedSubmitIcon = icon;
+      document.querySelectorAll('.submit-icon-option').forEach(btn => {
+        btn.classList.remove('ring-pink-400');
+        if (btn.dataset.icon === icon) {
+          btn.classList.add('ring-pink-400');
+        }
+      });
+    }
+    
+    function selectAdminColor(color) {
+      selectedAdminColor = color;
+      document.querySelectorAll('.admin-color-option').forEach(btn => {
+        btn.classList.remove('ring-gray-400');
+        if (btn.dataset.color === color) {
+          btn.classList.add('ring-gray-400');
+        }
+      });
+    }
+    
+    function selectAdminIcon(icon) {
+      selectedAdminIcon = icon;
+      document.querySelectorAll('.admin-icon-option').forEach(btn => {
+        btn.classList.remove('ring-pink-400');
+        if (btn.dataset.icon === icon) {
+          btn.classList.add('ring-pink-400');
+        }
+      });
+    }
+    
+    // Submit Game (User Submission)
+    async function submitGame() {
+      if (isLoading) return;
+      
+      const title = document.getElementById('submit-game-title').value.trim();
+      const description = document.getElementById('submit-game-description').value.trim();
+      const password = document.getElementById('submit-game-password').value;
+      
+      if (!title) {
+        showSubmitFormError('Please enter a game title');
+        return;
+      }
+      
+      const totalGames = games.length + pendingGames.length;
+      if (totalGames >= 999) {
+        showSubmitFormError('Maximum limit of 999 games reached. Please try again later.');
+        return;
+      }
+      
+      isLoading = true;
+      updateSubmitButton(true);
+      
+      const newGame = {
+        title,
+        description: description || 'No description',
+        color: selectedSubmitColor,
+        icon: selectedSubmitIcon,
+        password: password || '',
+        type: 'user_submitted',
+        status: 'pending',
+        submittedBy: currentUser,
+        username: currentUser,
+        createdAt: new Date().toISOString()
+      };
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create(newGame);
+        if (result.isOk) {
+          showSubmitFormSuccess('Game submitted for approval! Admins will review it shortly.');
+          triggerConfetti();
+          resetSubmitForm();
+        } else {
+          showSubmitFormError('Failed to submit game. Please try again.');
+        }
+      }
+      
+      isLoading = false;
+      updateSubmitButton(false);
+    }
+    
+    // Add Admin Game (Automatic Approval)
+    async function addAdminGame() {
+      if (isLoading) return;
+      
+      const title = document.getElementById('game-title').value.trim();
+      const description = document.getElementById('game-description').value.trim();
+      const password = document.getElementById('game-password').value;
+      
+      if (!title) {
+        showFormError('Please enter a game title');
+        return;
+      }
+      
+      if (games.length >= 999) {
+        showFormError('Maximum limit of 999 games reached. Please delete some games first.');
+        return;
+      }
+      
+      isLoading = true;
+      updateAdminSubmitButton(true);
+      
+      const newGame = {
+        title,
+        description: description || 'No description',
+        color: selectedAdminColor,
+        icon: selectedAdminIcon,
+        password: password || '',
+        type: 'admin_created',
+        status: 'approved',
+        submittedBy: currentUser,
+        username: currentUser,
+        createdAt: new Date().toISOString()
+      };
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create(newGame);
+        if (result.isOk) {
+          showFormSuccess('Game added successfully!');
+          triggerConfetti();
+          resetAdminForm();
+        } else {
+          showFormError('Failed to add game. Please try again.');
+        }
+      }
+      
+      isLoading = false;
+      updateAdminSubmitButton(false);
+    }
+    
+    // Approve Game
+    async function approveGame(gameId) {
+      if (isLoading) return;
+      
+      isLoading = true;
+      const game = pendingGames.find(g => g.__backendId === gameId);
+      if (!game) return;
+      
+      game.status = 'approved';
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.update(game);
+        if (result.isOk) {
+          showToast(`"${game.title}" approved!`);
+        } else {
+          showToast('Failed to approve game');
+        }
+      }
+      
+      isLoading = false;
+    }
+    
+    // Reject Game
+    async function rejectGame(gameId) {
+      if (isLoading) return;
+      
+      isLoading = true;
+      const game = pendingGames.find(g => g.__backendId === gameId);
+      if (!game) return;
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.delete(game);
+        if (result.isOk) {
+          showToast(`"${game.title}" rejected`);
+        } else {
+          showToast('Failed to reject game');
+        }
+      }
+      
+      isLoading = false;
+    }
+    
+    function updateAdminSubmitButton(loading) {
+      const btn = document.getElementById('admin-submit-btn');
+      const text = document.getElementById('admin-submit-text');
+      
+      if (loading) {
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
+        text.textContent = 'Adding...';
+      } else {
+        btn.disabled = false;
+        btn.classList.remove('opacity-70');
+        text.textContent = 'Add Game';
+      }
+    }
+    
+    function updateSubmitButton(loading) {
+      const btn = document.getElementById('submit-btn');
+      const text = document.getElementById('submit-text');
+      
+      if (loading) {
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
+        text.textContent = 'Submitting...';
+      } else {
+        btn.disabled = false;
+        btn.classList.remove('opacity-70');
+        text.textContent = 'Submit Game';
+      }
+    }
+    
+    function resetSubmitForm() {
+      document.getElementById('submit-game-title').value = '';
+      document.getElementById('submit-game-description').value = '';
+      document.getElementById('submit-game-password').value = '';
+      document.getElementById('submit-preview-container').classList.add('hidden');
+      selectSubmitColor('pink');
+      selectSubmitIcon('gamepad');
+    }
+    
+    function resetAdminForm() {
+      document.getElementById('game-title').value = '';
+      document.getElementById('game-description').value = '';
+      document.getElementById('game-password').value = '';
+      document.getElementById('preview-container').classList.add('hidden');
+      selectAdminColor('pink');
+      selectAdminIcon('gamepad');
+    }
+    
+    function showFormError(message) {
+      const errorEl = document.getElementById('form-error');
+      const successEl = document.getElementById('form-success');
+      successEl.classList.add('hidden');
+      errorEl.textContent = message;
+      errorEl.classList.remove('hidden');
+      setTimeout(() => errorEl.classList.add('hidden'), 5000);
+    }
+    
+    function showFormSuccess(message) {
+      const errorEl = document.getElementById('form-error');
+      const successEl = document.getElementById('form-success');
+      errorEl.classList.add('hidden');
+      successEl.textContent = message;
+      successEl.classList.remove('hidden');
+      setTimeout(() => successEl.classList.add('hidden'), 3000);
+    }
+    
+    function showSubmitFormError(message) {
+      const errorEl = document.getElementById('submit-form-error');
+      const successEl = document.getElementById('submit-form-success');
+      successEl.classList.add('hidden');
+      errorEl.textContent = message;
+      errorEl.classList.remove('hidden');
+      setTimeout(() => errorEl.classList.add('hidden'), 5000);
+    }
+    
+    function showSubmitFormSuccess(message) {
+      const errorEl = document.getElementById('submit-form-error');
+      const successEl = document.getElementById('submit-form-success');
+      errorEl.classList.add('hidden');
+      successEl.textContent = message;
+      successEl.classList.remove('hidden');
+      setTimeout(() => successEl.classList.add('hidden'), 3000);
+    }
+    
+    function previewAdminGame() {
+      const title = document.getElementById('game-title').value.trim() || 'Untitled Game';
+      const description = document.getElementById('game-description').value.trim() || 'No description';
+      
+      const previewCard = document.getElementById('preview-card');
+      previewCard.innerHTML = renderGameCardHTML({
+        title,
+        description,
+        color: selectedAdminColor,
+        icon: selectedAdminIcon,
+        password: document.getElementById('game-password').value
+      }, true);
+      
+      document.getElementById('preview-container').classList.remove('hidden');
+    }
+    
+    function previewSubmitGame() {
+      const title = document.getElementById('submit-game-title').value.trim() || 'Untitled Game';
+      const description = document.getElementById('submit-game-description').value.trim() || 'No description';
+      
+      const previewCard = document.getElementById('submit-preview-card');
+      previewCard.innerHTML = renderGameCardHTML({
+        title,
+        description,
+        color: selectedSubmitColor,
+        icon: selectedSubmitIcon,
+        password: document.getElementById('submit-game-password').value
+      }, true);
+      
+      document.getElementById('submit-preview-container').classList.remove('hidden');
+    }
+    
+    function renderGames() {
+      const grid = document.getElementById('games-grid');
+      const emptyState = document.getElementById('empty-state');
+      
+      if (games.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      
+      emptyState.classList.add('hidden');
+      
+      const existingCards = new Map();
+      grid.querySelectorAll('[data-game-id]').forEach(card => {
+        existingCards.set(card.dataset.gameId, card);
+      });
+      
+      games.forEach((game, index) => {
+        const gameId = game.__backendId;
+        const existingCard = existingCards.get(gameId);
+        
+        if (existingCard) {
+          existingCard.querySelector('.game-title').textContent = game.title;
+          existingCard.querySelector('.game-description').textContent = game.description || 'No description';
+          existingCards.delete(gameId);
+        } else {
+          const cardEl = document.createElement('div');
+          cardEl.dataset.gameId = gameId;
+          cardEl.className = 'animate-bounce-in';
+          cardEl.style.animationDelay = `${index * 0.1}s`;
+          cardEl.innerHTML = renderGameCardHTML(game);
+          grid.appendChild(cardEl);
+        }
+      });
+      
+      existingCards.forEach(card => card.remove());
+    }
+    
+    function renderPendingGames() {
+      const container = document.getElementById('approvals-list');
+      const noApprovals = document.getElementById('no-approvals');
+      
+      if (pendingGames.length === 0) {
+        container.innerHTML = '';
+        noApprovals.classList.remove('hidden');
+        return;
+      }
+      
+      noApprovals.classList.add('hidden');
+      container.innerHTML = pendingGames.map(game => `
+        <div class="clay-card p-6 animate-bounce-in">
+          <div class="flex gap-4 mb-4">
+            <div class="w-16 h-16 ${colorClasses[game.color] || 'gradient-orange'} rounded-2xl flex items-center justify-center shadow-lg text-white flex-shrink-0">
+              ${iconSVGs[game.icon] || iconSVGs.gamepad}
+            </div>
+            <div class="flex-1">
+              <h3 class="clay-title text-lg font-bold text-gray-700">${game.title}</h3>
+              <p class="text-gray-500 text-sm">${game.description || 'No description'}</p>
+              <p class="text-xs text-gray-400 mt-2">Submitted by: <span class="font-semibold">${game.submittedBy}</span></p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <button onclick="approveGame('${game.__backendId}')" class="flex-1 clay-button text-white py-2 font-semibold rounded-xl hover:scale-105 transition-transform">
+              Approve
+            </button>
+            <button onclick="rejectGame('${game.__backendId}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 font-semibold rounded-xl transition-colors">
+              Reject
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderGameCardHTML(game, isPreview = false) {
+      const hasPassword = game.password && game.password.length > 0;
+      const colorClass = colorClasses[game.color] || 'gradient-orange';
+      const iconSVG = iconSVGs[game.icon] || iconSVGs.gamepad;
+      
+      return `
+        <div class="clay-card p-6 glow-border cursor-pointer group" onclick="${!isPreview ? `openGame('${game.__backendId || ''}')` : ''}">
+          <div class="flex justify-between items-start mb-4">
+            <div class="w-16 h-16 ${colorClass} rounded-2xl flex items-center justify-center shadow-lg text-white">
+              ${iconSVG}
+            </div>
+            ${hasPassword ? `
+              <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center" title="Password Protected">
+                <svg class="w-5 h-5 text-orange-600" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="5" y="11" width="14" height="10" rx="2"/>
+                  <path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+            ` : ''}
+          </div>
+          <h3 class="game-title clay-title text-xl font-bold text-gray-700 mb-2">${game.title}</h3>
+          <p class="game-description text-gray-500 text-sm mb-4 line-clamp-2">${game.description || 'No description'}</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-400">${isPreview ? 'Preview' : formatDate(game.createdAt)}</span>
+            ${!isPreview ? `
+              <button onclick="event.stopPropagation(); promptDelete('${game.__backendId}')" class="opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-50 rounded-lg" title="Delete Game">
+                <svg class="w-5 h-5 text-red-400 hover:text-red-600" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+    
+    function formatDate(isoString) {
+      if (!isoString) return 'Unknown';
+      const date = new Date(isoString);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+    
+    function openGame(gameId) {
+      const game = games.find(g => g.__backendId === gameId);
+      if (!game) return;
+      
+      if (game.password && game.password.length > 0) {
+        gameToUnlock = game;
+        document.getElementById('password-modal').classList.remove('hidden');
+        document.getElementById('modal-password').value = '';
+        document.getElementById('password-error').classList.add('hidden');
+        document.getElementById('modal-password').focus();
+      } else {
+        launchGame(game);
+      }
+    }
+    
+    function unlockGame() {
+      const enteredPassword = document.getElementById('modal-password').value;
+      
+      if (gameToUnlock && enteredPassword === gameToUnlock.password) {
+        closePasswordModal();
+        launchGame(gameToUnlock);
+      } else {
+        document.getElementById('password-error').textContent = 'Incorrect password. Please try again.';
+        document.getElementById('password-error').classList.remove('hidden');
+      }
+    }
+    
+    function closePasswordModal() {
+      document.getElementById('password-modal').classList.add('hidden');
+      gameToUnlock = null;
+    }
+    
+    function launchGame(game) {
+      const overlay = document.getElementById('loading-overlay');
+      overlay.classList.remove('hidden');
+      
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        triggerConfetti();
+        showToast(`Launching "${game.title}"!`);
+      }, 1500);
+    }
+    
+    function promptDelete(gameId) {
+      const game = games.find(g => g.__backendId === gameId);
+      if (!game) return;
+      
+      gameToDelete = game;
+      document.getElementById('delete-game-name').textContent = `Delete "${game.title}"? This cannot be undone.`;
+      document.getElementById('delete-modal').classList.remove('hidden');
+    }
+    
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.add('hidden');
+      gameToDelete = null;
+    }
+    
+    async function confirmDelete() {
+      if (!gameToDelete || isLoading) return;
+      
+      isLoading = true;
+      const btn = document.getElementById('confirm-delete-btn');
+      btn.textContent = 'Deleting...';
+      btn.disabled = true;
+      
+      if (window.dataSdk) {
+        const result = await window.dataSdk.delete(gameToDelete);
+        if (result.isOk) {
+          showToast('Game deleted successfully');
+        } else {
+          showToast('Failed to delete game');
+        }
+      }
+      
+      btn.textContent = 'Delete';
+      btn.disabled = false;
+      isLoading = false;
+      closeDeleteModal();
+    }
+    
+    function updateProgress() {
+      const count = games.length;
+      const max = 10;
+      const percentage = Math.min((count / max) * 100, 100);
+      
+      document.getElementById('progress-fill').style.width = `${percentage}%`;
+      document.getElementById('progress-text').textContent = `${count} / ${max} games`;
+    }
+    
+    function updateStats() {
+      document.getElementById('stat-games').textContent = games.length;
+    }
+    
+    function updateApprovalCount() {
+      const count = pendingGames.length;
+      const badge = document.getElementById('approval-count');
+      
+      if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+    
+    // Chat
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      const messagesContainer = document.getElementById('chat-messages');
+      const newMessage = document.createElement('div');
+      newMessage.className = 'chat-bubble flex gap-3 items-start justify-end new-message';
+      newMessage.innerHTML = `
+        <div class="glass-panel px-4 py-2 max-w-xs bg-gradient-to-r from-orange-400/20 to-orange-300/20">
+          <p class="text-sm font-semibold text-orange-600">${escapeHtml(currentUser)}</p>
+          <p class="text-gray-700">${escapeHtml(message)}</p>
+        </div>
+        <div class="w-10 h-10 gradient-orange rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="white">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+          </svg>
+        </div>
+      `;
+      
+      messagesContainer.appendChild(newMessage);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      input.value = '';
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Effects
+    function triggerConfetti() {
+      const container = document.getElementById('confetti-container');
+      const colors = ['#ffb74d', '#ffa726', '#ff9800', '#ff8a65', '#ff6f00'];
+      
+      for (let i = 0; i < 30; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.bottom = '0';
+        piece.style.animationDuration = `${0.5 + Math.random() * 0.5}s`;
+        piece.style.animationDelay = `${Math.random() * 0.2}s`;
+        container.appendChild(piece);
+        
+        setTimeout(() => piece.remove(), 1500);
+      }
+    }
+    
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 clay-surface px-6 py-3 z-50 animate-bounce-in';
+      toast.innerHTML = `<p class="font-semibold text-gray-700">${message}</p>`;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+    
+    // Initialize
+    init();
   </script>
-
-</body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9caf3c80c65516d0',t:'MTc3MDU5Njc5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
